@@ -56,10 +56,7 @@ pacstrap /mnt base base-devel linux-zen &&
 printf "Finished pacstrap\n"
 genfstab -U /mnt >> /mnt/etc/fstab &&
 printf "Generated fstab\n"
-cp -r /etc/skel /mnt/etc/ &&
-printf "Copied skeleton files into chroot\n"
-cp -r ../scripts /mnt/root/ &&
-cp -r ../packages /mnt/root/ &&
-cp -r ../loader /mnt/root/ &&
+cp pkgs.txt /mnt/root/ &&
+cp chroot-install.sh /mnt/root/ &&
 printf "Copied scripts into chroot\n"
 printf "Please run arch-chroot /mnt and bash ./chroot-install.sh\n"

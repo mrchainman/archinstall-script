@@ -19,12 +19,12 @@ parted -s /dev/$disk mkpart ESP fat32 2MiB 500MiB &&
 printf "Created ESP partition" || ( printf "Faliled to create ESP partition... exiting\n"& exit 0)
 parted -s /dev/$disk mkpart System btrfs 510MiB 100% &&
 printf "Created System partition" || ( printf "Faliled to create System partition... exiting\n"& exit 0)
-mkfs.fat /dev/$disk1 &&
+mkfs.fat $(echo /dev/$disk'1') &&
 printf "Created fat FS" || ( printf "Failed to create fat FS exiting...\n"& exit 0 )
-mkfs.btrfs /dev/$disk2 &&
+mkfs.btrfs $(echo /dev/$disk'2') &&
 printf "Created btrfs FS" || ( printf "Failed to create btrfs FS exiting...\n"& exit 0 )
-mount /dev/$disk2 /mnt 1>/dev/null &&
-printf "Mounted /dev/$disk2 on /mnt\n"
+mount $(echo /dev/$disk'2') /mnt 1>/dev/null &&
+printf "Mounted $(echo /dev/$disk'2') on /mnt\n"
 btrfs subvolume create /mnt/@ 1>/dev/null &&
 printf "Created subvolume @\n"
 btrfs subvolume create /mnt/@root 1>/dev/null &&
@@ -35,21 +35,21 @@ btrfs subvolume create /mnt/@home 1>/dev/null &&
 printf "Created subvolume @home\n"
 btrfs subvolume create /mnt/@snapshots 1>/dev/null &&
 printf "Created subvolume @snapshots\n"
-umount /dev/$disk2 &&
-printf "Unmounted /dev/$disk2\n"
-mount -o subvol=@ /dev/$disk2 /mnt 1>/dev/null &&
+umount $(echo /dev/$disk'2') &&
+printf "Unmounted /dev/$disk'2')\n"
+mount -o subvol=@ $(echo /dev/$disk'2') /mnt 1>/dev/null &&
 printf "Mounted subvolume @ on /mnt\n"
 mkdir /mnt/.snapshots /mnt/home /mnt/root /mnt/var /mnt/boot 1>/dev/null &&
 printf "Created directories in /mnt\n"
-mount -o subvol=@root /dev/$disk2 /mnt/root 1>/dev/null &&
+mount -o subvol=@root $(echo /dev/$disk'2') /mnt/root 1>/dev/null &&
 printf "Mounted @root\n"
-mount -o subvol=@home /dev/$disk2 /mnt/home 1>/dev/null &&
+mount -o subvol=@home $(echo /dev/$disk'2') /mnt/home 1>/dev/null &&
 printf "Mounted @home\n"
-mount -o subvol=@var /dev/$disk2 /mnt/var 1>/dev/null &&
+mount -o subvol=@var $(echo /dev/$disk'2') /mnt/var 1>/dev/null &&
 printf "Mounted @var\n"
-mount -o subvol=@snapshots /dev/$disk2 /mnt/.snapshots 1>/dev/null &&
+mount -o subvol=@snapshots $(echo /dev/$disk'2') /mnt/.snapshots 1>/dev/null &&
 printf "Mounted @snapshots\n"
-mount /dev/$disk1 /mnt/boot 1>/dev/null &&
+mount $(echo /dev/$disk'1') /mnt/boot 1>/dev/null &&
 printf "Mounted ESP on /mnt/boot\n"
 printf "Starting pacstrap ...\n"
 pacstrap /mnt base base-devel linux-zen &&

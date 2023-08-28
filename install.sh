@@ -13,11 +13,11 @@ ping -c 4 archlinux.org 1>/dev/null &&
 echo "Online" || (echo "Offline, exiting...\n"& exit 0)
 timedatectl set-ntp true &&
 timedatectl status
-parted -s /dev/$disk mklabel gpt &&
-printf "Set Label to GPT" || ( printf "Faliled to set Label... exiting\n"& exit 0)
-parted -s /dev/$disk mkpart ESP fat32 2MiB 500MiB &&
-printf "Created ESP partition" || ( printf "Faliled to create ESP partition... exiting\n"& exit 0)
-parted -s /dev/$disk mkpart System btrfs 510MiB 100% &&
+printf "Creating Bootpartition..."
+# gfdisk /dev/$disk
+sgdisk -n 1:0:+500MiB -c 1:"EFI System Partition" -t 1:ef00 "${echo /dev/$disk'1'}" &&
+printf "Done." || ( printf "Faliled to create Bootpartition... exiting\n"& exit 0)
+parted -s /dev/$disk mkpart -f System btrfs 510MiB 100% &&
 printf "Created System partition" || ( printf "Faliled to create System partition... exiting\n"& exit 0)
 mkfs.fat $(echo /dev/$disk'1') &&
 printf "Created fat FS" || ( printf "Failed to create fat FS exiting...\n"& exit 0 )
